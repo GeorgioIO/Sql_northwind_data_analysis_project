@@ -1,0 +1,1 @@
+CREATE DATABASE northwind_db;
