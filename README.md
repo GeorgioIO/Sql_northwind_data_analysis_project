@@ -9,13 +9,14 @@ Dive into my project of analysing the famous **northwind** database! Focusing on
 ## The questions i wanted to answer through my SQL queries were :
 
 1. Which employee generated the most sales?
-2. What are the top products by revenue ?
-3. What are the best categories ?
-4. What supplier contribute the most ?
-5. What is the country with the highest revenue ?
-6. What products are associated with the top suppliers ?
-7. How does the sales trend monthly ?
-8. What is the most wanted product in the top 3 country ?
+2. What are the consistent employees ? -- POSTPONED
+3. What are the top products by revenue ?
+4. What is the most demanded category in the top products ?
+5. What supplier contribute the most ?
+6. What is the country with the highest revenue ?
+7. What products are associated with the top suppliers ?
+8. How does the sales trend monthly ?
+9. What is the most wanted product in the top 3 country ?
 
 # Tools I Used
 
