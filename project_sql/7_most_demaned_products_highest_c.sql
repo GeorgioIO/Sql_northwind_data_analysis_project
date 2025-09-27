@@ -28,5 +28,4 @@ JOIN order_details od ON o.order_id = od.order_id
 JOIN products p ON od.product_id = p.product_id
 JOIN categories ca ON p.category_id = ca.category_id
 GROUP BY hrc.country , p.product_name , ca.category_name
-HAVING SUM(od.quantity) > 150
 ORDER BY total_quantity DESC;

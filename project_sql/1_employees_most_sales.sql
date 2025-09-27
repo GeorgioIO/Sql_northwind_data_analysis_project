@@ -1,8 +1,9 @@
 /*
-Question : Which employee generated the most sales ?
-- Identify what employee generated the most orders sales 
-- Include the top 10 only
-- Why ? Highlight the top performing customers , offering an idea of what employees perform on a high level
+Question : Which employee generated the highest total sales? ?
+- Identify what employee generated the highest total sales
+- Include the top 10 only and each employee country
+- Why ? Highlight the top performing customers, 
+  offering an idea of what employees perform on a high level
 */
 
 SELECT

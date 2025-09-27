@@ -4,6 +4,7 @@ Question : What are is the most demanded category in the most profitable product
 - Why ? Identifying the most demanded category in the most profitable products allows us to ddirectly 
 know what is the best category in the database
 */
+
 WITH profitable_products AS (
 SELECT
     p.product_id,

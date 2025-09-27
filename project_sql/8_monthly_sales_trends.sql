@@ -1,3 +1,11 @@
+/*
+Question: How does the monthly sales trend evolve over time?
+Method : - Extract Year , Month From each Order
+         - Calculate total sales per year per month (GROUP BY)
+Why ? This helps identify how the sales evolve over the year by each month, 
+      and for each year what is the peak month.
+*/
+
 SELECT 
     EXTRACT(YEAR FROM order_date) AS order_year,
     EXTRACT(MONTH FROM order_date) AS order_month,

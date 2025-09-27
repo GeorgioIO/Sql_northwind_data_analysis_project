@@ -1,8 +1,9 @@
 /*
-Question : What are the top products by revenue ?
+Question : What are the top products ranked by total revenue?
 - Identify what product generates the most revenue or sales.
-- Include the top 10 only ?
-- Why ? identifying what products generates the most sales helps us focusing on them and analysing more in depth why they are the best.
+- Include the top 10 only with their categories
+- Why ? identifying what products generates the most sales helps us focusing 
+        on them and analysing more in depth why they are the best.
 */
 
 SELECT

@@ -1,6 +1,6 @@
 # Introduction to _Sales and Customer Insights with SQL (Northwind Database)_
 
-Dive into my project of analysing the famous **northwind** database! Focusing on .... , This project explore .....
+Dive into my project of analysing the famous **northwind** database! Focusing on answering questions to get insights , This project explore Top Contributing Suppliers, High demand products , High revenue countries.
 
 🔍 SQL queries ? Check them out here [project_sql](/project_sql)
 
@@ -8,15 +8,14 @@ Dive into my project of analysing the famous **northwind** database! Focusing on
 
 ## The questions i wanted to answer through my SQL queries were :
 
-1. Which employee generated the most sales?
-2. What are the consistent employees ? -- POSTPONED
-3. What are the top products by revenue ?
-4. What is the most demanded category in the top products ?
-5. What supplier contribute the most ?
-6. What is the country with the highest revenue ?
-7. What products are associated with the top suppliers ?
-8. How does the sales trend monthly ?
-9. What is the most wanted product in the top 3 country ?
+1. Which employee generated the highest total sales?
+2. Which employees show consistent sales performance over time?
+3. What are the top products ranked by total revenue?
+4. Which supplier contributes the most to overall sales?
+5. Which products are supplied by the top-performing suppliers?
+6. Which country generates the highest revenue?
+7. What are the most demanded products within the highest-revenue countries?
+8. How does the monthly sales trend evolve over time?
 
 # Tools I Used
 
@@ -28,3 +27,347 @@ For my deep dive into the northwind database , i harnessed the power of several 
 - **Git & Github:** Essential for version controll and sharing my SQL sripts and analysis.
 
 # The Analysis
+
+![ERD Photo](assets/erd_database_photo.png)
+
+Each query for this project is aimed at investigating specific aspect of the database , Here how i approached each question :
+
+## 1. Which employee generated the highest total sales?
+
+To identify the highest employee in total sales, i joined employees with two tables orders and order details , grouped by employee_id , country and employee_name and finally ordered by rounded total sales.
+
+```sql
+SELECT
+    o.employee_id,
+    e.country,
+    CONCAT(first_name , ' ' , last_name) AS employee_name,
+    ROUND(SUM((unit_price * quantity) * (1 - discount))) AS total_sales
+FROM employees e
+JOIN orders o ON e.employee_id = o.employee_id
+JOIN order_details od ON o.order_id = od.order_id
+GROUP BY o.employee_id , e.country , employee_name
+ORDER BY total_sales DESC
+LIMIT 10;
+```
+
+| Employee ID | Country | Employee Name    | Total Sales |
+| ----------: | :------ | :--------------- | ----------: |
+|           4 | USA     | Margaret Peacock |     232,891 |
+|           3 | USA     | Janet Leverling  |     202,813 |
+|           1 | USA     | Nancy Davolio    |     192,108 |
+|           2 | USA     | Andrew Fuller    |     166,538 |
+|           8 | USA     | Laura Callahan   |     126,862 |
+|           7 | UK      | Robert King      |     124,568 |
+|           9 | UK      | Anne Dodsworth   |      77,308 |
+|           6 | UK      | Michael Suyama   |      73,913 |
+|           5 | UK      | Steven Buchanan  |      68,792 |
+
+Here's the breakown of the employees with the highest total sales:
+
+- **Specific countries** : in the top ten employees , as we can see they are either from **UK** or **USA**.
+- **Wide Sales Range** : Top 10 employees total sales span from $68,000 to $232,000 , indicating significant difference in products revenue.
+
+## 2. Which employees show consistent sales performance over time?
+
+To identify the employees that showed consitent sales performance across the years in the database , i used **CTE** to get the top three employee each year , using `RANK()` and `PARTITION BY` so i can classify and rank them by year.
+
+in the second query i extracted the employees that are ranked above the fifth rank but also the time they are appearing is equal to the count of the distinct years.
+
+```sql
+WITH top_three_emp_yearly AS (
+    SELECT
+    EXTRACT(YEAR FROM order_date) AS year,
+    e.employee_id,
+    CONCAT(first_name , ' ' , last_name) AS full_name,
+    ROUND(SUM((unit_price * quantity) * (1 - discount))) AS total_sales,
+    RANK() OVER (PARTITION BY EXTRACT(YEAR FROM order_date) ORDER BY ROUND(SUM((unit_price * quantity) * (1 - discount))) DESC) AS rank_in_year
+    FROM employees e
+    JOIN orders o ON e.employee_id = o.employee_id
+    JOIN order_details od ON o.order_id = od.order_id
+    GROUP BY year , e.employee_id , full_name
+    ORDER BY year
+)
+
+
+SELECT
+    employee_id,
+    full_name
+FROM
+    top_three_emp_yearly
+WHERE rank_in_year <= 5
+GROUP BY employee_id , full_name
+HAVING COUNT(DISTINCT year) = (SELECT COUNT(DISTINCT year) FROM top_three_emp_yearly);
+```
+
+| Employee ID | Full Name        | Country |
+| ----------: | :--------------- | :------ |
+|           1 | Nancy Davolio    | USA     |
+|           2 | Andrew Fuller    | USA     |
+|           4 | Margaret Peacock | USA     |
+
+Here's the breakown of the employees with the highest total sales:
+
+- **USA Consistency** : The USA again show a strong position in sales also when it comes to consistency for her employees over the time.
+
+## 3. What are the top products ranked by total revenue?
+
+To identify the top products ranked by total revenue , I joined product table with order_details **to calculate total sales per product** , category **To get the category of the product** , i limited the result the ten rows and ordered by total sales.
+
+```sql
+SELECT
+    p.product_id,
+    p.product_name,
+    category_name,
+    ROUND(SUM((od.unit_price * quantity) * (1 - discount))) AS total_sales
+FROM products p
+JOIN order_details od ON p.product_id = od.product_id
+JOIN categories c ON p.category_id = c.category_id
+GROUP BY p.product_id , p.product_name , category_name
+ORDER BY total_sales DESC
+LIMIT 10;
+```
+
+| Product ID | Product Name            | Category Name  | Total Sales |
+| ---------: | :---------------------- | :------------- | ----------: |
+|         38 | Côte de Blaye           | Beverages      |     141,397 |
+|         29 | Thüringer Rostbratwurst | Meat/Poultry   |      80,369 |
+|         59 | Raclette Courdavault    | Dairy Products |      71,156 |
+|         62 | Tarte au sucre          | Confections    |      47,235 |
+|         60 | Camembert Pierrot       | Dairy Products |      46,825 |
+|         56 | Gnocchi di nonna Alice  | Grains/Cereals |      42,593 |
+|         51 | Manjimup Dried Apples   | Produce        |      41,820 |
+|         17 | Alice Mutton            | Meat/Poultry   |      32,698 |
+|         18 | Carnarvon Tigers        | Seafood        |      29,172 |
+|         28 | Rössle Sauerkraut       | Produce        |      25,697 |
+
+Here's the breakown of the ten products by total revenue:
+
+- **Diverse Categories** : different type of categories is present in the top ten products by total revenue.
+
+- **Wide Sales Range** : The total sales per product span from $25,000 to $141,00 , indicating big difference in the revenue per product.
+
+## 4. Which supplier contributes the most to overall sales?
+
+To identify the suppliers with the most contribution of the store sales , i joined suppliers with products , order_details tables to calculate the total sales for each supplier.
+
+In Another CTE i caculated the total sales for the store , and finally i extracted the supplier id , company name , his total sales rounded , and how much he contributed by dividing his total sales to the store total sales.
+
+```sql
+/*
+Question: Which supplier contributes the most to overall sales?
+- Objective: Calculate each supplier’s total sales and their percentage share of the store’s total revenue.
+- Method:
+    1. Compute total revenue per supplier (based on unit price, quantity, and discount).
+    2. Compute total store revenue.
+    3. Divide supplier revenue by total revenue to get percentage contribution.
+- Why: Identifying the top-contributing suppliers highlights the most valuable
+       partnerships and helps guide strategic sourcing decisions.
+*/
+
+WITH suppliers_sales AS (
+    SELECT
+        s.supplier_id,
+        s.company_name,
+        s.country,
+        SUM((od.unit_price * od.quantity) * (1 - od.discount))::NUMERIC AS total_supplier_sales
+    FROM suppliers s
+    JOIN products p ON s.supplier_id = p.supplier_id
+    JOIN order_details od ON p.product_id = od.product_id
+    GROUP BY s.supplier_id , s.company_name , s.country
+) , total_store_sales AS (
+    SELECT
+        SUM((unit_price * quantity) * (1 - discount))::NUMERIC AS total_sales
+    FROM order_details
+)
+
+
+SELECT
+    ss.supplier_id,
+    ss.company_name,
+    ss.country,
+    ROUND(ss.total_supplier_sales) AS supplier_sales,
+    ROUND((ss.total_supplier_sales / tss.total_sales) * 100 , 2) AS sales_contribution
+FROM suppliers_sales ss , total_store_sales tss
+ORDER BY sales_contribution DESC
+LIMIT 10;
+```
+
+| Supplier ID | Company Name                      | Country   | Supplier Sales | Sales Contribution (%) |
+| ----------: | :-------------------------------- | :-------- | -------------: | ---------------------: |
+|          18 | Aux joyeux ecclésiastiques        | France    |        153,691 |                  12.14 |
+|          12 | Plutzer Lebensmittelgroßmärkte AG | Germany   |        145,372 |                  11.48 |
+|          28 | Gai pâturage                      | France    |        117,981 |                   9.32 |
+|           7 | Pavlova, Ltd.                     | Australia |        106,460 |                   8.41 |
+|          24 | G'day, Mate                       | Australia |         65,627 |                   5.18 |
+|          29 | Forêts d'érables                  | Canada    |         61,588 |                   4.87 |
+|           8 | Specialty Biscuits, Ltd.          | UK        |         59,032 |                   4.66 |
+|          26 | Pasta Buttini s.r.l.              | Italy     |         50,255 |                   3.97 |
+|          14 | Formaggi Fortini s.r.l.           | Italy     |         48,225 |                   3.81 |
+|          15 | Norske Meierier                   | Norway    |         43,142 |                   3.41 |
+
+Here's the breakown of the suppliers with the top contribution to the store sales
+
+- **European Dominance** : European countries like **France** , **Germany** , **Italy** , **Norway** and **UK** make most of the list of the best suppliers.
+
+- **Wide Sales Range** : Again we can identify a wide salary range as the total sales for a supplier span from $43,000 to $150,000 , with **Aux Joyeux Ecclesiastiques** being the top contributor with 12% of the database sales.
+
+# 5. Which products are supplied by the top-performing suppliers?
+
+To identify the products related to the top-performing suppliers , i used the two last CTEs from the last question . I added on them one CTE to get top ten suppliers only and then to answer to question , I joined the last CTE `top_ten_suppliers` with products table to get the products related to the top ten suppliers and joined with category to get each product category
+
+```sql
+WITH suppliers_sales AS (
+    SELECT
+        s.supplier_id,
+        s.company_name,
+        SUM((od.unit_price * od.quantity) * (1 - od.discount))::NUMERIC AS total_supplier_sales
+    FROM suppliers s
+    JOIN products p ON s.supplier_id = p.supplier_id
+    JOIN order_details od ON p.product_id = od.product_id
+    GROUP BY s.supplier_id , s.company_name
+),
+total_store_sales AS
+(
+    SELECT
+        SUM((unit_price * quantity) * (1 - discount))::NUMERIC AS total_sales
+    FROM order_details
+),
+top_ten_suppliers AS
+(
+SELECT
+    ss.supplier_id,
+    ss.company_name,
+    ROUND(ss.total_supplier_sales) AS supplier_sales,
+    ROUND((ss.total_supplier_sales / tss.total_sales) * 100 , 2) AS sales_contribution
+    FROM suppliers_sales ss , total_store_sales tss
+    ORDER BY sales_contribution DESC
+    LIMIT 10
+)
+
+SELECT
+    tts.supplier_id,
+    tts.company_name,
+    c.category_name,
+    p.product_name
+FROM top_ten_suppliers tts
+JOIN products p ON tts.supplier_id = p.supplier_id
+JOIN categories c ON p.category_id = c.category_id
+ORDER BY tts.company_name;
+
+```
+
+| Supplier ID | Company Name                      | Category Name  | Product Name                    |
+| ----------: | :-------------------------------- | :------------- | :------------------------------ |
+|          18 | Aux joyeux ecclésiastiques        | Beverages      | Côte de Blaye                   |
+|          18 | Aux joyeux ecclésiastiques        | Beverages      | Chartreuse verte                |
+|          29 | Forêts d'érables                  | Confections    | Tarte au sucre                  |
+|          29 | Forêts d'érables                  | Condiments     | Sirop d'érable                  |
+|          14 | Formaggi Fortini s.r.l.           | Dairy Products | Mozzarella di Giovanni          |
+|          14 | Formaggi Fortini s.r.l.           | Dairy Products | Mascarpone Fabioli              |
+|          14 | Formaggi Fortini s.r.l.           | Dairy Products | Gorgonzola Telino               |
+|          24 | G'day, Mate                       | Meat/Poultry   | Perth Pasties                   |
+|          24 | G'day, Mate                       | Grains/Cereals | Filo Mix                        |
+|          24 | G'day, Mate                       | Produce        | Manjimup Dried Apples           |
+|          28 | Gai pâturage                      | Dairy Products | Raclette Courdavault            |
+|          28 | Gai pâturage                      | Dairy Products | Camembert Pierrot               |
+|          15 | Norske Meierier                   | Dairy Products | Gudbrandsdalsost                |
+|          15 | Norske Meierier                   | Dairy Products | Flotemysost                     |
+|          15 | Norske Meierier                   | Dairy Products | Geitost                         |
+|          26 | Pasta Buttini s.r.l.              | Grains/Cereals | Ravioli Angelo                  |
+|          26 | Pasta Buttini s.r.l.              | Grains/Cereals | Gnocchi di nonna Alice          |
+|           7 | Pavlova, Ltd.                     | Beverages      | Outback Lager                   |
+|           7 | Pavlova, Ltd.                     | Condiments     | Vegie-spread                    |
+|           7 | Pavlova, Ltd.                     | Meat/Poultry   | Alice Mutton                    |
+|           7 | Pavlova, Ltd.                     | Confections    | Pavlova                         |
+|           7 | Pavlova, Ltd.                     | Seafood        | Carnarvon Tigers                |
+|          12 | Plutzer Lebensmittelgroßmärkte AG | Condiments     | Original Frankfurter grüne Soße |
+|          12 | Plutzer Lebensmittelgroßmärkte AG | Produce        | Rössle Sauerkraut               |
+|          12 | Plutzer Lebensmittelgroßmärkte AG | Meat/Poultry   | Thüringer Rostbratwurst         |
+|          12 | Plutzer Lebensmittelgroßmärkte AG | Grains/Cereals | Wimmers gute Semmelknödel       |
+|          12 | Plutzer Lebensmittelgroßmärkte AG | Beverages      | Rhönbräu Klosterbier            |
+|           8 | Specialty Biscuits, Ltd.          | Confections    | Sir Rodney's Scones             |
+|           8 | Specialty Biscuits, Ltd.          | Confections    | Sir Rodney's Marmalade          |
+|           8 | Specialty Biscuits, Ltd.          | Confections    | Teatime Chocolate Biscuits      |
+|           8 | Specialty Biscuits, Ltd.          | Beverages      | Chai                            |
+|           8 | Specialty Biscuits, Ltd.          | Confections    | Scottish Longbreads             |
+
+Here's the breakown of the products for the top performing suppliers:
+
+- **Category Variety** : We can clearly see a huge variety of product categories.
+
+- **Dairy Products / Beveraves** : Category like **Diary Products** Dominate the list with more than 10 appeareances while **Beverages** with 5 , indicating that diary products or beverages suppliers tend to perform better than the others.
+
+# 6. Which country generates the highest revenue?
+
+To identify the countries that generate the highest revenue , i simply joined customers with orders and order_details , grouping by country , i calculated the total sales for each one , ordering the results by total_sales and finally limiting the result to ten rows.
+
+```sql
+SELECT
+    country,
+    ROUND(SUM((unit_price * quantity) * (1 - discount))) AS total_sales
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+JOIN order_details od ON o.order_id = od.order_id
+GROUP BY country
+ORDER BY total_sales DESC
+LIMIT 10;
+
+```
+
+| Country   | Total Sales |
+| :-------- | ----------: |
+| USA       |     245,585 |
+| Germany   |     230,285 |
+| Austria   |     128,004 |
+| Brazil    |     106,926 |
+| France    |      81,358 |
+| UK        |      58,971 |
+| Venezuela |      56,811 |
+| Sweden    |      54,495 |
+| Canada    |      50,196 |
+| Ireland   |      49,980 |
+
+Here's the breakown of the countries that generates the highest revenue:
+
+- **American Appearance** : When it comes to total sales generated per countries by customers we can clearly see that american countries appear besides european different to when it comes to sales from suppliers where europe nearly dominate the list.
+
+- Countries like **USA** topping the lists with $245,000 total sales while germany come in the second place with $230,000
+
+# 7. What are the most demanded products within the highest-revenue countries?
+
+- To identify the most demanded products withing the highest-revenue countries , i first used the last question query as an CTE **to get the top ten best performing countries**
+
+- In the query i joined the CTE to five tables , i filtered only the product that are ordered more than 150 times , finally ordered the result by total quantity.
+
+```sql
+WITH highest_revenue_countries AS (SELECT
+    country,
+    ROUND(SUM((unit_price * quantity) * (1 - discount))) AS total_sales
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+JOIN order_details od ON o.order_id = od.order_id
+GROUP BY country
+ORDER BY total_sales DESC
+LIMIT 10)
+
+SELECT
+    hrc.country,
+    p.product_name,
+    ca.category_name,
+    SUM(od.quantity) AS total_quantity
+FROM highest_revenue_countries hrc
+LEFT JOIN customers c ON hrc.country = c.country
+JOIN orders o ON c.customer_id = o.customer_id
+JOIN order_details od ON o.order_id = od.order_id
+JOIN products p ON od.product_id = p.product_id
+JOIN categories ca ON p.category_id = ca.category_id
+GROUP BY hrc.country , p.product_name , ca.category_name
+HAVING SUM(od.quantity) > 150
+ORDER BY total_quantity DESC;
+```
+
+Here a breakdown of the most demanded products for the top-performing countries :
+
+- **Germany Dominance** : Germany clearly leads in total product quantities, escpially **Dairy Products** like **Camember Pierrot (405 units)** and **Raclette Courdavault (337 units)** Other top categories include **Beverages** and **Confections** showing diverse consumer demand.
+
+- **USA Strengh in Meat and Sweets** : The USa shows strong demand in **Meat/Poultry** and **Confections** , with products like **Alice Mutton (361 units)** and **Tarte au sucre (356 units)** , **Beverages** like **Rhonbrau Klosterbier** performs well.
