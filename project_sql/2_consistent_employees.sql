@@ -12,7 +12,7 @@ WITH top_three_emp_yearly AS (
     e.employee_id,
     CONCAT(first_name , ' ' , last_name) AS full_name,
     e.country,
-    ROUND(AVG((unit_price * quantity) * (1 - discount))) AS total_sales,
+    ROUND(SUM((unit_price * quantity) * (1 - discount))) AS total_sales,
     RANK() OVER (PARTITION BY EXTRACT(YEAR FROM order_date) ORDER BY ROUND(SUM((unit_price * quantity) * (1 - discount))) DESC) AS rank_in_year
     FROM employees e
     JOIN orders o ON e.employee_id = o.employee_id

@@ -371,3 +371,52 @@ Here a breakdown of the most demanded products for the top-performing countries 
 - **Germany Dominance** : Germany clearly leads in total product quantities, escpially **Dairy Products** like **Camember Pierrot (405 units)** and **Raclette Courdavault (337 units)** Other top categories include **Beverages** and **Confections** showing diverse consumer demand.
 
 - **USA Strengh in Meat and Sweets** : The USa shows strong demand in **Meat/Poultry** and **Confections** , with products like **Alice Mutton (361 units)** and **Tarte au sucre (356 units)** , **Beverages** like **Rhonbrau Klosterbier** performs well.
+
+# 7. How does the monthly sales trend evolves over time?
+
+- To identify how the sales trend evolve over time by each month of the year , simply from the orders table i joined it with order_details table to calculate the total sales , i extracted the order year and month and grouped by each month and year
+
+```sql
+SELECT
+    EXTRACT(YEAR FROM order_date) AS order_year,
+    EXTRACT(MONTH FROM order_date) AS order_month,
+    ROUND(SUM((unit_price * quantity) * (1 - discount))) AS total_sale
+FROM orders o
+JOIN order_details od ON o.order_id = od.order_id
+GROUP BY order_year , order_month
+ORDER BY order_year , order_month ;
+```
+
+| Order Year | Order Month | Total Sale |
+| ---------- | ----------: | ---------: |
+| 1996       |           7 |     27,862 |
+| 1996       |           8 |     25,485 |
+| 1996       |           9 |     26,381 |
+| 1996       |          10 |     37,516 |
+| 1996       |          11 |     45,600 |
+| 1996       |          12 |     45,240 |
+| 1997       |           1 |     61,258 |
+| 1997       |           2 |     38,484 |
+| 1997       |           3 |     38,547 |
+| 1997       |           4 |     53,033 |
+| 1997       |           5 |     53,781 |
+| 1997       |           6 |     36,363 |
+| 1997       |           7 |     51,021 |
+| 1997       |           8 |     47,288 |
+| 1997       |           9 |     55,629 |
+| 1997       |          10 |     66,749 |
+| 1997       |          11 |     43,534 |
+| 1997       |          12 |     71,398 |
+| 1998       |           1 |     94,222 |
+| 1998       |           2 |     99,415 |
+| 1998       |           3 |    104,854 |
+| 1998       |           4 |    123,799 |
+| 1998       |           5 |     18,334 |
+
+Here a breakdown of the sales over each month over the years ?
+
+- **1997 is the only consistent year** with the sales spanning over all the months of the year from **January** (1) to **December** (12)
+
+- **Higher Sales in 1998** as we can see the beginning of sales in **1998** is better than both **1997** and **1996** with numbers in **1998** approximately above $90k , while in both **1997** and **1996** less than $50k , indicating significant improvement in **1998**
+
+- **Peaks at the end of the year** for both **1996** and **1997** we can clearly identify peaks in sales at the end of the year for the months **10** , **11** , **12**.
