@@ -18,3 +18,4 @@ GROUP BY o.employee_id , e.country , employee_name
 ORDER BY total_sales DESC
 LIMIT 10; 
 
+

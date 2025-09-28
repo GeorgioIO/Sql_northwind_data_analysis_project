@@ -1,6 +1,6 @@
 # Introduction to _Sales and Customer Insights with SQL (Northwind Database)_
 
-Dive into my project of analysing the famous **northwind** database! Focusing on answering questions to get insights , This project explore Top Contributing Suppliers, High demand products , High revenue countries.
+Dive into my project of analyzing the famous **Northwind** database! Focusing on answering questions to get insights , This project explore Top Contributing Suppliers, High demand products , High revenue countries.
 
 🔍 SQL queries ? Check them out here [project_sql](/project_sql)
 
@@ -19,7 +19,7 @@ Dive into my project of analysing the famous **northwind** database! Focusing on
 
 # Tools I Used
 
-For my deep dive into the northwind database , i harnessed the power of several key tools :
+For my deep dive into the **Northwind** database , i harnessed the power of several key tools :
 
 - **SQL:** The backbone of my analysis, allowing me to query the database.
 - **PostgreSQL:** The chosen database management system.
@@ -62,7 +62,7 @@ LIMIT 10;
 |           6 | UK      | Michael Suyama   |      73,913 |
 |           5 | UK      | Steven Buchanan  |      68,792 |
 
-Here's the breakown of the employees with the highest total sales:
+Here's the breakown of employees with the highest total sales:
 
 - **Specific countries** : in the top ten employees , as we can see they are either from **UK** or **USA**.
 - **Wide Sales Range** : Top 10 employees total sales span from $68,000 to $232,000 , indicating significant difference in products revenue.
@@ -71,7 +71,7 @@ Here's the breakown of the employees with the highest total sales:
 
 To identify the employees that showed consitent sales performance across the years in the database , i used **CTE** to get the top three employee each year , using `RANK()` and `PARTITION BY` so i can classify and rank them by year.
 
-in the second query i extracted the employees that are ranked above the fifth rank but also the time they are appearing is equal to the count of the distinct years.
+In the second query i extracted the employees that are ranked above the fifth rank but also the time they are appearing is equal to the count of the distinct years.
 
 ```sql
 WITH top_three_emp_yearly AS (
@@ -87,7 +87,6 @@ WITH top_three_emp_yearly AS (
     GROUP BY year , e.employee_id , full_name
     ORDER BY year
 )
-
 
 SELECT
     employee_id,
@@ -105,9 +104,11 @@ HAVING COUNT(DISTINCT year) = (SELECT COUNT(DISTINCT year) FROM top_three_emp_ye
 |           2 | Andrew Fuller    | USA     |
 |           4 | Margaret Peacock | USA     |
 
-Here's the breakown of the employees with the highest total sales:
+Here's the breakown of which employees are consistent in the database:
 
-- **USA Consistency** : The USA again show a strong position in sales also when it comes to consistency for her employees over the time.
+- **USA Consistency** : The **USA** again show a strong position in sales also when it comes to consistency for her employees over the time.
+
+- **Nancy Davolio** is the best and most consistent supplier in the database.
 
 ## 3. What are the top products ranked by total revenue?
 
@@ -140,30 +141,19 @@ LIMIT 10;
 |         18 | Carnarvon Tigers        | Seafood        |      29,172 |
 |         28 | Rössle Sauerkraut       | Produce        |      25,697 |
 
-Here's the breakown of the ten products by total revenue:
+Here's the breakown of the ten products ranked by total revenue:
 
 - **Diverse Categories** : different type of categories is present in the top ten products by total revenue.
 
-- **Wide Sales Range** : The total sales per product span from $25,000 to $141,00 , indicating big difference in the revenue per product.
+- **Wide Sales Range** : The total sales per product span from **$25,000** to **$141,000** , indicating big difference in the revenue per product.
 
 ## 4. Which supplier contributes the most to overall sales?
 
-To identify the suppliers with the most contribution of the store sales , i joined suppliers with products , order_details tables to calculate the total sales for each supplier.
+To identify the suppliers with the most contribution of the database sales , i joined suppliers with products and order_details tables to calculate the total sales for each supplier.
 
-In Another CTE i caculated the total sales for the store , and finally i extracted the supplier id , company name , his total sales rounded , and how much he contributed by dividing his total sales to the store total sales.
+In Another CTE i caculated the total sales for the database , and finally i extracted the supplier id , company name , his total sales rounded , and how much he contributed by dividing his total sales to the database total sales.
 
 ```sql
-/*
-Question: Which supplier contributes the most to overall sales?
-- Objective: Calculate each supplier’s total sales and their percentage share of the store’s total revenue.
-- Method:
-    1. Compute total revenue per supplier (based on unit price, quantity, and discount).
-    2. Compute total store revenue.
-    3. Divide supplier revenue by total revenue to get percentage contribution.
-- Why: Identifying the top-contributing suppliers highlights the most valuable
-       partnerships and helps guide strategic sourcing decisions.
-*/
-
 WITH suppliers_sales AS (
     SELECT
         s.supplier_id,
@@ -205,9 +195,9 @@ LIMIT 10;
 |          14 | Formaggi Fortini s.r.l.           | Italy     |         48,225 |                   3.81 |
 |          15 | Norske Meierier                   | Norway    |         43,142 |                   3.41 |
 
-Here's the breakown of the suppliers with the top contribution to the store sales
+Here's the breakown of the suppliers with the top contribution in the database total sales :
 
-- **European Dominance** : European countries like **France** , **Germany** , **Italy** , **Norway** and **UK** make most of the list of the best suppliers.
+- **European Dominance** : European countries like **France** , **Germany** , **Italy** , **Norway** and **UK** make most of the list of the best suppliers , with suppliers like **Aux joyeux ecclésiastiques** , **Plutzer Lebensmittelgroßmärkte AG** and **Gai pâturage** the top three suppliers being from europe , also we can see **Australian participation** with **Pavlova, Ltd** , **G'day, Mate**.
 
 - **Wide Sales Range** : Again we can identify a wide salary range as the total sales for a supplier span from $43,000 to $150,000 , with **Aux Joyeux Ecclesiastiques** being the top contributor with 12% of the database sales.
 
@@ -293,7 +283,7 @@ ORDER BY tts.company_name;
 
 Here's the breakown of the products for the top performing suppliers:
 
-- **Category Variety** : We can clearly see a huge variety of product categories.
+- **Category Variety** : We can clearly notice a huge variety of product categories.
 
 - **Dairy Products / Beveraves** : Category like **Diary Products** Dominate the list with more than 10 appeareances while **Beverages** with 5 , indicating that diary products or beverages suppliers tend to perform better than the others.
 
@@ -420,3 +410,33 @@ Here a breakdown of the sales over each month over the years ?
 - **Higher Sales in 1998** as we can see the beginning of sales in **1998** is better than both **1997** and **1996** with numbers in **1998** approximately above $90k , while in both **1997** and **1996** less than $50k , indicating significant improvement in **1998**
 
 - **Peaks at the end of the year** for both **1996** and **1997** we can clearly identify peaks in sales at the end of the year for the months **10** , **11** , **12**.
+
+# What I Learned
+
+Throughout this project , i've turbocharged my SQL knowledge with some serious challenges :
+
+- **Window Functions:** Used window functions for the first time in this project, applying them with CTEs. This opened my eyes to a new way of solving problems and I’m excited to explore them deeper.
+
+- **Complex Query Crafting:** Learned how to break down tough business questions into smaller parts, then build queries step by step until I got the right output.
+
+- **Analytical Thinking:** This project wasn’t just about writing SQL — it was about asking the right questions, interpreting results, and thinking like an analyst instead of just a coder.
+
+- **Data Storytelling:** Realized that numbers alone don’t mean much. The real skill is turning query results into insights that actually explain what’s happening in the business.
+
+# So What ?
+
+### Below the insights i gathered from all the analysis :
+
+1. **Top-performing customers :** The top-performing customers of the database between the **UK** and **USA** , is clearly **USA** . the highes total sales of an employee is **$232,000!**.
+
+2. **Profitable Products :** Products like **Cote de Blaye** is the most profitable product with approximately **$140,000** in sales , products like **Meat/Poultry** is also profitable.
+
+3. **Best Suppliers :** When it comes to suppliers **European** ones dominate the list with 7 out of the top 10 being **European** , The France suppliers **Aux Joyeux ecclesiastiques** is the highest in sales contribution.
+
+4. **Top Performing Categories :** Suppliers that sells beverages typically tops the list of the best suppliers like **Aux Joyeux Ecclesiastiques** , **Plutzer LebensmittelgroBmark** , as well as **Dairy Products** that made **Gai paturage** ranked third by only selling them.
+
+5. **Highest Revenue Countries :** When it comes to revenue from customers **USA** again top the list with approximately **$245,000** sales , while **Germany** comes in second with **$230,000**.
+
+# Closing Thoughts
+
+Finally this project safe to say enhanced my SQL skils and provided valuable insights of the **Northwind** database.
