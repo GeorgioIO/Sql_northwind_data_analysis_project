@@ -367,8 +367,6 @@ HAVING SUM(od.quantity) > 150
 ORDER BY total_quantity DESC;
 ```
 
-![Question 8 Graph](/visuals/question_8.png)
-
 | Country | Product Name                    | Category       | Total Quantity |
 | ------- | ------------------------------- | -------------- | -------------- |
 | Germany | Camembert Pierrot               | Dairy Products | 405            |
@@ -459,6 +457,8 @@ JOIN order_details od ON o.order_id = od.order_id
 GROUP BY order_year , order_month
 ORDER BY order_year , order_month ;
 ```
+
+![Question 8 Graph](/visuals/question_8.png)
 
 | Order Year | Order Month | Total Sale |
 | ---------- | ----------: | ---------: |
