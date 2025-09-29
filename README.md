@@ -1,6 +1,6 @@
-# Introduction to _Sales and Customer Insights with SQL (Northwind Database)_
+# _Sales and Customer Insights with SQL (Northwind Database)_
 
-Dive into my project of analyzing the famous **Northwind** database! Focusing on answering questions to get insights , This project explore Top Contributing Suppliers, High demand products , High revenue countries.
+Dive into my project of analyzing the famous **Northwind** database! Focusing on answering questions to get insights , This project explore 🚚 Top Contributing Suppliers, 📈 High demand products , 🌍 High revenue countries and many more.
 
 🔍 SQL queries ? Check them out here [project_sql](/project_sql)
 
@@ -24,17 +24,19 @@ For my deep dive into the **Northwind** database , i harnessed the power of seve
 - **SQL:** The backbone of my analysis, allowing me to query the database.
 - **PostgreSQL:** The chosen database management system.
 - **Visual Studio Code:** My go-to for writing queries.
-- **Git & Github:** Essential for version controll and sharing my SQL sripts and analysis.
+- **Git & Github:** Essential for version control and sharing my SQL scripts and analysis.
 
-# The Analysis
+# 📊 The Analysis
+
+## Entity Relationship Diagram
 
 ![ERD Photo](assets/erd_database_photo.png)
 
 Each query for this project is aimed at investigating specific aspect of the database , Here how i approached each question :
 
-## 1. Which employee generated the highest total sales?
+## 1️⃣ Which employee generated the highest total sales?
 
-To identify the highest employee in total sales, i joined employees with two tables orders and order details , grouped by employee_id , country and employee_name and finally ordered by rounded total sales.
+To identify which employee generated the highest total revenue (sales) , i joined employees with two tables orders and order_details , grouped by employee_id , country and employee_name and finally ordered by rounded total sales.
 
 ```sql
 SELECT
@@ -64,12 +66,13 @@ LIMIT 10;
 
 Here's the breakown of employees with the highest total sales:
 
-- **Specific countries** : in the top ten employees , as we can see they are either from **UK** or **USA**.
+- **USA Employees Domination** : The Employees that are from the USA dominates the top 5 ranks in the list , with their sales starting at **$232,000** to **$126,000**.
+
 - **Wide Sales Range** : Top 10 employees total sales span from $68,000 to $232,000 , indicating significant difference in products revenue.
 
-## 2. Which employees show consistent sales performance over time?
+## 2️⃣ Which employees show consistent sales performance over time?
 
-To identify the employees that showed consitent sales performance across the years in the database , i used **CTE** to get the top three employee each year , using `RANK()` and `PARTITION BY` so i can classify and rank them by year.
+To identify the employees that showed consistent sales performance across the years in the database , i used **CTE** to get the top three employees each year , using `RANK()` and `PARTITION BY` so i can classify and rank them by year.
 
 In the second query i extracted the employees that are ranked above the fifth rank but also the time they are appearing is equal to the count of the distinct years.
 
@@ -108,11 +111,11 @@ Here's the breakown of which employees are consistent in the database:
 
 - **USA Consistency** : The **USA** again show a strong position in sales also when it comes to consistency for her employees over the time.
 
-- **Nancy Davolio** is the best and most consistent supplier in the database.
+- **Nancy Davolio** is the best and most consistent supplier in the database , in second place comes **Andrew Fuller** also from the USA , and lastly **Margaret Peacock**.
 
-## 3. What are the top products ranked by total revenue?
+## 3️⃣ What are the top products ranked by total revenue?
 
-To identify the top products ranked by total revenue , I joined product table with order_details **to calculate total sales per product** , category **To get the category of the product** , i limited the result the ten rows and ordered by total sales.
+To identify the top products ranked by total revenue , I joined product table with order_details **to calculate total sales per product** , category **to get the category of the product** , i limited the result to ten rows and ordered by total sales.
 
 ```sql
 SELECT
@@ -141,15 +144,15 @@ LIMIT 10;
 |         18 | Carnarvon Tigers        | Seafood        |      29,172 |
 |         28 | Rössle Sauerkraut       | Produce        |      25,697 |
 
-Here's the breakown of the ten products ranked by total revenue:
+Here's the breakown of the top ten products ranked by total revenue:
 
-- **Diverse Categories** : different type of categories is present in the top ten products by total revenue.
+- **Diverse Categories** : Different type of categories is present in the top ten products by total revenue like **Beverages** , **Meat/Poultry** , **Dairy Products**...
 
 - **Wide Sales Range** : The total sales per product span from **$25,000** to **$141,000** , indicating big difference in the revenue per product.
 
-## 4. Which supplier contributes the most to overall sales?
+## 4️⃣ Which supplier contributes the most to overall sales?
 
-To identify the suppliers with the most contribution of the database sales , i joined suppliers with products and order_details tables to calculate the total sales for each supplier.
+To identify the suppliers with the most contribution of the total revenue (sales) , i joined suppliers with products and order_details tables to calculate the total revenue for each supplier.
 
 In Another CTE i caculated the total sales for the database , and finally i extracted the supplier id , company name , his total sales rounded , and how much he contributed by dividing his total sales to the database total sales.
 
@@ -199,9 +202,9 @@ Here's the breakown of the suppliers with the top contribution in the database t
 
 - **European Dominance** : European countries like **France** , **Germany** , **Italy** , **Norway** and **UK** make most of the list of the best suppliers , with suppliers like **Aux joyeux ecclésiastiques** , **Plutzer Lebensmittelgroßmärkte AG** and **Gai pâturage** the top three suppliers being from europe , also we can see **Australian participation** with **Pavlova, Ltd** , **G'day, Mate**.
 
-- **Wide Sales Range** : Again we can identify a wide salary range as the total sales for a supplier span from $43,000 to $150,000 , with **Aux Joyeux Ecclesiastiques** being the top contributor with 12% of the database sales.
+- **Wide Sales Range** : Again we can identify a wide sale range as the total sales for a supplier span from $43,000 to $150,000 , with **Aux Joyeux Ecclesiastiques** being the top contributor with 12% of the database sales.
 
-# 5. Which products are supplied by the top-performing suppliers?
+# 5️⃣ Which products are supplied by the top-performing suppliers?
 
 To identify the products related to the top-performing suppliers , i used the two last CTEs from the last question . I added on them one CTE to get top ten suppliers only and then to answer to question , I joined the last CTE `top_ten_suppliers` with products table to get the products related to the top ten suppliers and joined with category to get each product category
 
@@ -285,11 +288,11 @@ Here's the breakown of the products for the top performing suppliers:
 
 - **Category Variety** : We can clearly notice a huge variety of product categories.
 
-- **Dairy Products / Beveraves** : Category like **Diary Products** Dominate the list with more than 10 appeareances while **Beverages** with 5 , indicating that diary products or beverages suppliers tend to perform better than the others.
+- **Dairy Products / Beveraves** : Category like **Dairy Products** Dominate the list with more than 10 appeareances while **Beverages** with 5 , indicating that dairy products or beverages suppliers tend to perform better than the others.
 
-# 6. Which country generates the highest revenue?
+# 6️⃣ Which country generates the highest revenue?
 
-To identify the countries that generate the highest revenue , i simply joined customers with orders and order_details , grouping by country , i calculated the total sales for each one , ordering the results by total_sales and finally limiting the result to ten rows.
+To identify the countries that generate the highest revenue , i simply joined customers with orders and order_details , grouping by country , i calculated the total revenue (sales) for each one , ordering the results by total_sales and finally limiting the result to ten rows.
 
 ```sql
 SELECT
@@ -319,15 +322,15 @@ LIMIT 10;
 
 Here's the breakown of the countries that generates the highest revenue:
 
-- **American Appearance** : When it comes to total sales generated per countries by customers we can clearly see that american countries appear besides european different to when it comes to sales from suppliers where europe nearly dominate the list.
+- **American Appearance** : When it comes to total revenue generated per countries by customers we can clearly see that american countries appear beside european countries , different to when it comes to revenue (sales) from suppliers where europe nearly dominate the list.
 
-- Countries like **USA** topping the lists with $245,000 total sales while germany come in the second place with $230,000
+- Countries like **USA** topping the lists with **$245,000** total sales while **Germany** come in the second place with **$230,000**
 
-# 7. What are the most demanded products within the highest-revenue countries?
+# 7️⃣ What are the most demanded products within the highest-revenue countries (as in quantity)?
 
 - To identify the most demanded products withing the highest-revenue countries , i first used the last question query as an CTE **to get the top ten best performing countries**
 
-- In the query i joined the CTE to five tables , i filtered only the product that are ordered more than 150 times , finally ordered the result by total quantity.
+- In the query i joined the CTE to five tables , i filtered only the product that **are ordered more than 150 times (by quantity)** , finally ordered the result by total quantity.
 
 ```sql
 WITH highest_revenue_countries AS (SELECT
@@ -356,15 +359,85 @@ HAVING SUM(od.quantity) > 150
 ORDER BY total_quantity DESC;
 ```
 
+| Country | Product Name                    | Category       | Total Quantity |
+| ------- | ------------------------------- | -------------- | -------------- |
+| Germany | Camembert Pierrot               | Dairy Products | 405            |
+| USA     | Gnocchi di nonna Alice          | Grains/Cereals | 386            |
+| USA     | Alice Mutton                    | Meat/Poultry   | 361            |
+| USA     | Tarte au sucre                  | Confections    | 356            |
+| Germany | Boston Crab Meat                | Seafood        | 345            |
+| Germany | Raclette Courdavault            | Dairy Products | 337            |
+| USA     | Rhönbräu Klosterbier            | Beverages      | 297            |
+| USA     | Pavlova                         | Confections    | 295            |
+| USA     | Chang                           | Beverages      | 294            |
+| Germany | Lakkalikööri                    | Beverages      | 287            |
+| Austria | Guaraná Fantástica              | Beverages      | 283            |
+| Germany | Sir Rodney's Scones             | Confections    | 280            |
+| USA     | Raclette Courdavault            | Dairy Products | 276            |
+| USA     | Konbu                           | Seafood        | 262            |
+| Germany | Gorgonzola Telino               | Dairy Products | 250            |
+| USA     | Scottish Longbreads             | Confections    | 247            |
+| Germany | Teatime Chocolate Biscuits      | Confections    | 246            |
+| USA     | Gorgonzola Telino               | Dairy Products | 241            |
+| USA     | Tourtière                       | Meat/Poultry   | 240            |
+| Germany | Chang                           | Beverages      | 235            |
+| Germany | Tunnbröd                        | Grains/Cereals | 227            |
+| Austria | Wimmers gute Semmelknödel       | Grains/Cereals | 224            |
+| Germany | Pâté chinois                    | Meat/Poultry   | 223            |
+| USA     | Geitost                         | Dairy Products | 221            |
+| Germany | Tarte au sucre                  | Confections    | 215            |
+| USA     | Flotemysost                     | Dairy Products | 215            |
+| Brazil  | Camembert Pierrot               | Dairy Products | 212            |
+| USA     | Jack's New England Clam Chowder | Seafood        | 211            |
+| Germany | Wimmers gute Semmelknödel       | Grains/Cereals | 208            |
+| Austria | Sirop d'érable                  | Condiments     | 206            |
+| Germany | Gumbär Gummibärchen             | Confections    | 202            |
+| Germany | Original Frankfurter grüne Soße | Condiments     | 198            |
+| Austria | Alice Mutton                    | Meat/Poultry   | 191            |
+| USA     | Pâté chinois                    | Meat/Poultry   | 191            |
+| Germany | Singaporean Hokkien Fried Mee   | Grains/Cereals | 191            |
+| Germany | Flotemysost                     | Dairy Products | 190            |
+| Germany | Uncle Bob's Organic Dried Pears | Produce        | 190            |
+| Austria | Gudbrandsdalsost                | Dairy Products | 190            |
+| USA     | Rogede sild                     | Seafood        | 186            |
+| USA     | Perth Pasties                   | Meat/Poultry   | 186            |
+| UK      | Gorgonzola Telino               | Dairy Products | 185            |
+| USA     | Inlagd Sill                     | Seafood        | 185            |
+| Germany | Konbu                           | Seafood        | 184            |
+| Germany | Mozzarella di Giovanni          | Dairy Products | 183            |
+| Germany | Pavlova                         | Confections    | 180            |
+| USA     | Chai                            | Beverages      | 180            |
+| Austria | Raclette Courdavault            | Dairy Products | 180            |
+| Austria | Gorgonzola Telino               | Dairy Products | 178            |
+| Austria | Chartreuse verte                | Beverages      | 175            |
+| France  | Tarte au sucre                  | Confections    | 174            |
+| Germany | Chartreuse verte                | Beverages      | 174            |
+| USA     | Steeleye Stout                  | Beverages      | 174            |
+| USA     | Camembert Pierrot               | Dairy Products | 173            |
+| Germany | Steeleye Stout                  | Beverages      | 173            |
+| USA     | Thüringer Rostbratwurst         | Meat/Poultry   | 173            |
+| Brazil  | Teatime Chocolate Biscuits      | Confections    | 171            |
+| USA     | Lakkalikööri                    | Beverages      | 170            |
+| USA     | Côte de Blaye                   | Beverages      | 170            |
+| Germany | Chai                            | Beverages      | 170            |
+| UK      | Camembert Pierrot               | Dairy Products | 166            |
+| Austria | Pavlova                         | Confections    | 164            |
+| Germany | Inlagd Sill                     | Seafood        | 162            |
+| Austria | Camembert Pierrot               | Dairy Products | 160            |
+| Germany | Rhönbräu Klosterbier            | Beverages      | 156            |
+| Germany | Manjimup Dried Apples           | Produce        | 155            |
+| France  | Carnarvon Tigers                | Seafood        | 154            |
+| USA     | Gula Malacca                    | Condiments     | 152            |
+
 Here a breakdown of the most demanded products for the top-performing countries :
 
 - **Germany Dominance** : Germany clearly leads in total product quantities, escpially **Dairy Products** like **Camember Pierrot (405 units)** and **Raclette Courdavault (337 units)** Other top categories include **Beverages** and **Confections** showing diverse consumer demand.
 
 - **USA Strengh in Meat and Sweets** : The USa shows strong demand in **Meat/Poultry** and **Confections** , with products like **Alice Mutton (361 units)** and **Tarte au sucre (356 units)** , **Beverages** like **Rhonbrau Klosterbier** performs well.
 
-# 7. How does the monthly sales trend evolves over time?
+# 8️⃣ How does the monthly sales trend evolves over time?
 
-- To identify how the sales trend evolve over time by each month of the year , simply from the orders table i joined it with order_details table to calculate the total sales , i extracted the order year and month and grouped by each month and year
+- To identify how the sales trend evolves over time by each month of the year , simply from the orders table i joined it with order_details table to calculate the total sales , i extracted the order year and month and grouped by each month and year
 
 ```sql
 SELECT
@@ -403,7 +476,7 @@ ORDER BY order_year , order_month ;
 | 1998       |           4 |    123,799 |
 | 1998       |           5 |     18,334 |
 
-Here a breakdown of the sales over each month over the years ?
+Here a breakdown of the sales over each month over the years :
 
 - **1997 is the only consistent year** with the sales spanning over all the months of the year from **January** (1) to **December** (12)
 
