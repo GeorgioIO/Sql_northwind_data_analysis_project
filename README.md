@@ -52,6 +52,8 @@ ORDER BY total_sales DESC
 LIMIT 10;
 ```
 
+![Question 1 Graph](/visuals/question_1.png)
+
 | Employee ID | Country | Employee Name    | Total Sales |
 | ----------: | :------ | :--------------- | ----------: |
 |           4 | USA     | Margaret Peacock |     232,891 |
@@ -131,6 +133,8 @@ ORDER BY total_sales DESC
 LIMIT 10;
 ```
 
+![Question 3 Graph](/visuals/question_3.png)
+
 | Product ID | Product Name            | Category Name  | Total Sales |
 | ---------: | :---------------------- | :------------- | ----------: |
 |         38 | Côte de Blaye           | Beverages      |     141,397 |
@@ -184,6 +188,8 @@ FROM suppliers_sales ss , total_store_sales tss
 ORDER BY sales_contribution DESC
 LIMIT 10;
 ```
+
+![Question 4 Graph](/visuals/question_4.png)
 
 | Supplier ID | Company Name                      | Country   | Supplier Sales | Sales Contribution (%) |
 | ----------: | :-------------------------------- | :-------- | -------------: | ---------------------: |
@@ -307,6 +313,8 @@ LIMIT 10;
 
 ```
 
+![Question 6 Graph](/visuals/question_6.png)
+
 | Country   | Total Sales |
 | :-------- | ----------: |
 | USA       |     245,585 |
@@ -358,6 +366,8 @@ GROUP BY hrc.country , p.product_name , ca.category_name
 HAVING SUM(od.quantity) > 150
 ORDER BY total_quantity DESC;
 ```
+
+![Question 8 Graph](/visuals/question_8.png)
 
 | Country | Product Name                    | Category       | Total Quantity |
 | ------- | ------------------------------- | -------------- | -------------- |
